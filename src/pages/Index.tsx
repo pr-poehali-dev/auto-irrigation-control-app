@@ -6,19 +6,22 @@ type Tab = "dashboard" | "schedule" | "stats" | "settings" | "alerts";
 const ILLUSTRATION = "https://cdn.poehali.dev/projects/0afda543-c5d3-45c9-bca4-953218fc2825/files/c4d18118-d972-42e5-a1cd-cddf5adf785f.jpg";
 
 // ─── Mock Data ───────────────────────────────────────────────────────────────
-const zones = [
-  { id: 1, name: "Грядка томатов", icon: "🍅", moisture: 68, status: "active", nextWatering: "сегодня 18:00", lastWatered: "2 часа назад" },
-  { id: 2, name: "Газон передний", icon: "🌿", moisture: 42, status: "dry", nextWatering: "сегодня 20:00", lastWatered: "вчера" },
-  { id: 3, name: "Цветники", icon: "🌸", moisture: 75, status: "good", nextWatering: "завтра 08:00", lastWatered: "3 часа назад" },
-  { id: 4, name: "Теплица", icon: "🥒", moisture: 55, status: "good", nextWatering: "завтра 09:00", lastWatered: "5 часов назад" },
+const zone = { id: 1, name: "Мой участок", icon: "🌱", moisture: 68, status: "good", nextWatering: "сегодня 18:00", lastWatered: "2 часа назад" };
+
+const sensors = [
+  { id: 1, name: "Влажность почвы", icon: "💧", value: "68%", unit: "", status: "online", color: "hsl(200,55%,40%)", bg: "hsla(200,55%,48%,0.12)" },
+  { id: 2, name: "Температура воздуха", icon: "🌡", value: "18", unit: "°C", status: "online", color: "hsl(22,50%,45%)", bg: "hsla(22,40%,55%,0.12)" },
+  { id: 3, name: "Датчик дождя", icon: "🌧", value: "Сухо", unit: "", status: "online", color: "hsl(142,35%,30%)", bg: "hsla(142,35%,28%,0.12)" },
 ];
 
+const zones = [zone];
+
 const logs = [
-  { id: 1, time: "10:30", date: "сегодня", zone: "Грядка томатов", duration: "12 мин", volume: "24 л", type: "auto" },
-  { id: 2, time: "08:00", date: "сегодня", zone: "Цветники", duration: "8 мин", volume: "16 л", type: "auto" },
-  { id: 3, time: "20:15", date: "вчера", zone: "Газон передний", duration: "20 мин", volume: "60 л", type: "manual" },
-  { id: 4, time: "18:00", date: "вчера", zone: "Грядка томатов", duration: "10 мин", volume: "20 л", type: "smart" },
-  { id: 5, time: "09:00", date: "2 дня назад", zone: "Теплица", duration: "15 мин", volume: "30 л", type: "auto" },
+  { id: 1, time: "10:30", date: "сегодня", zone: "Мой участок", duration: "12 мин", volume: "24 л", type: "auto" },
+  { id: 2, time: "08:00", date: "сегодня", zone: "Мой участок", duration: "8 мин", volume: "16 л", type: "smart" },
+  { id: 3, time: "20:15", date: "вчера", zone: "Мой участок", duration: "20 мин", volume: "40 л", type: "manual" },
+  { id: 4, time: "18:00", date: "вчера", zone: "Мой участок", duration: "10 мин", volume: "20 л", type: "auto" },
+  { id: 5, time: "09:00", date: "2 дня назад", zone: "Мой участок", duration: "15 мин", volume: "30 л", type: "auto" },
 ];
 
 const weekStats = [
@@ -32,17 +35,15 @@ const weekStats = [
 ];
 
 const alerts = [
-  { id: 1, type: "warning", title: "Низкая влажность — Газон передний", desc: "Влажность упала до 42%. Рекомендуется полив.", time: "30 мин назад", icon: "Droplets" },
-  { id: 2, type: "info", title: "Умный сценарий активирован", desc: "Дождь ожидается через 2 часа, полив перенесён.", time: "1 час назад", icon: "CloudRain" },
-  { id: 3, type: "maintenance", title: "Техническое обслуживание", desc: "Рекомендуется очистить фильтры системы (срок: 14 дней).", time: "3 дня назад", icon: "Wrench" },
-  { id: 4, type: "success", title: "Полив завершён успешно", desc: "Все зоны политы по расписанию. Расход: 100 л.", time: "5 часов назад", icon: "CheckCircle" },
+  { id: 1, type: "warning", title: "Низкая влажность почвы", desc: "Влажность упала до 68%. Рекомендуется внеплановый полив.", time: "30 мин назад", icon: "Droplets" },
+  { id: 2, type: "info", title: "Датчик дождя: осадки", desc: "Зафиксированы осадки. Плановый полив пропущен автоматически.", time: "1 час назад", icon: "CloudRain" },
+  { id: 3, type: "maintenance", title: "Техническое обслуживание", desc: "Рекомендуется проверить датчики и фильтры системы.", time: "3 дня назад", icon: "Wrench" },
+  { id: 4, type: "success", title: "Полив завершён успешно", desc: "Мой участок полит по расписанию. Расход: 40 л.", time: "5 часов назад", icon: "CheckCircle" },
 ];
 
 const schedule = [
-  { id: 1, zone: "Грядка томатов", icon: "🍅", days: ["Пн", "Ср", "Пт"], time: "18:00", duration: 12, enabled: true },
-  { id: 2, zone: "Газон передний", icon: "🌿", days: ["Вт", "Чт", "Сб", "Вс"], time: "20:00", duration: 20, enabled: true },
-  { id: 3, zone: "Цветники", icon: "🌸", days: ["Пн", "Ср", "Пт"], time: "08:00", duration: 8, enabled: true },
-  { id: 4, zone: "Теплица", icon: "🥒", days: ["Пн", "Вт", "Ср", "Чт", "Пт"], time: "09:00", duration: 15, enabled: false },
+  { id: 1, zone: "Мой участок", icon: "🌱", days: ["Пн", "Ср", "Пт"], time: "18:00", duration: 20, enabled: true },
+  { id: 2, zone: "Мой участок", icon: "🌱", days: ["Сб", "Вс"], time: "09:00", duration: 30, enabled: true },
 ];
 
 const ALL_DAYS = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
@@ -81,104 +82,82 @@ function StatusBadge({ status }: { status: string }) {
 
 // ─── Dashboard ───────────────────────────────────────────────────────────────
 function Dashboard() {
-  const totalLitersToday = 100;
-  const activeZones = zones.filter(z => z.status === "active").length;
-  const avgMoisture = Math.round(zones.reduce((a, z) => a + z.moisture, 0) / zones.length);
-
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-5 animate-fade-in">
       {/* Hero */}
       <div className="relative overflow-hidden rounded-3xl" style={{ background: "linear-gradient(135deg, hsl(142,35%,24%) 0%, hsl(168,40%,30%) 60%, hsl(142,30%,20%) 100%)" }}>
         <div className="absolute inset-0 opacity-20">
           <img src={ILLUSTRATION} alt="" className="w-full h-full object-cover object-center" />
         </div>
-        <div className="relative p-8">
+        <div className="relative p-6">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-sm font-body" style={{ color: "hsl(85,30%,75%)" }}>Сад · Сегодня, 15 мая</p>
-              <h2 className="font-display text-5xl font-light mt-1" style={{ color: "hsl(42,30%,96%)" }}>
-                Хороший день<br /><em>для полива</em>
+              <p className="text-xs font-body" style={{ color: "hsl(85,30%,75%)" }}>Сегодня, 15 мая</p>
+              <h2 className="font-display text-4xl font-light mt-1" style={{ color: "hsl(42,30%,96%)" }}>
+                {zone.name}
               </h2>
-              <p className="text-sm mt-3 font-body" style={{ color: "hsl(85,20%,80%)" }}>
-                Ожидается +18°C, влажность воздуха 62%
+              <p className="text-xs mt-2 font-body" style={{ color: "hsl(85,20%,80%)" }}>
+                Следующий полив: {zone.nextWatering}
               </p>
             </div>
             <div className="text-right">
-              <div className="text-6xl animate-leaf">🌿</div>
-              <p className="text-xs mt-2 font-body" style={{ color: "hsl(85,20%,70%)" }}>Дождь через 4 ч</p>
+              <div className="text-5xl animate-leaf">{zone.icon}</div>
+              <StatusBadge status={zone.status} />
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-4 mt-8">
-            {[
-              { label: "Зон активно", value: activeZones, icon: "Zap", unit: "" },
-              { label: "Потрачено воды", value: totalLitersToday, icon: "Droplets", unit: "л" },
-              { label: "Средняя влажность", value: avgMoisture, icon: "Leaf", unit: "%" },
-            ].map((s, i) => (
-              <div key={i} className="rounded-2xl p-4" style={{ background: "hsla(42,30%,96%,0.12)", backdropFilter: "blur(10px)" }}>
-                <Icon name={s.icon} size={18} style={{ color: "hsl(85,30%,72%)" }} />
-                <p className="font-display text-3xl font-light mt-2" style={{ color: "hsl(42,30%,96%)" }}>
-                  {s.value}<span className="text-lg">{s.unit}</span>
-                </p>
-                <p className="text-xs font-body mt-1" style={{ color: "hsl(85,20%,72%)" }}>{s.label}</p>
+          {/* Moisture big ring */}
+          <div className="flex items-center gap-5 mt-5">
+            <div className="relative flex-shrink-0">
+              <MoistureRing value={zone.moisture} size={96} />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <p className="font-display text-2xl font-medium" style={{ color: "hsl(42,30%,96%)" }}>{zone.moisture}%</p>
               </div>
-            ))}
+            </div>
+            <div className="flex-1 space-y-2">
+              <p className="text-xs font-body" style={{ color: "hsl(85,20%,75%)" }}>Влажность почвы</p>
+              <div className="w-full h-1.5 rounded-full" style={{ background: "hsla(42,30%,96%,0.2)" }}>
+                <div className="h-full rounded-full transition-all" style={{ width: `${zone.moisture}%`, background: "hsl(85,40%,65%)" }} />
+              </div>
+              <p className="text-xs font-body" style={{ color: "hsl(85,15%,65%)" }}>Полит {zone.lastWatered}</p>
+            </div>
+            <button className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 transition-all active:scale-95"
+              style={{ background: "hsla(42,30%,96%,0.18)", border: "1px solid hsla(42,30%,96%,0.25)" }}>
+              <Icon name="Droplets" size={20} style={{ color: "hsl(42,30%,96%)" }} />
+            </button>
           </div>
+        </div>
+      </div>
+
+      {/* Sensors */}
+      <div>
+        <h3 className="font-display text-xl font-light mb-3" style={{ color: "hsl(30,25%,15%)" }}>Датчики</h3>
+        <div className="grid grid-cols-3 gap-3">
+          {sensors.map(s => (
+            <div key={s.id} className="rounded-2xl p-3 flex flex-col items-center text-center"
+              style={{ background: s.bg, border: `1px solid ${s.bg.replace("0.12", "0.25")}` }}>
+              <span className="text-2xl mb-1">{s.icon}</span>
+              <p className="font-display font-medium" style={{ fontSize: 20, color: "hsl(30,25%,15%)", lineHeight: 1 }}>
+                {s.value}<span style={{ fontSize: 13 }}>{s.unit}</span>
+              </p>
+              <p className="text-xs font-body mt-1 leading-tight" style={{ color: "hsl(30,15%,50%)" }}>{s.name}</p>
+              <div className="flex items-center gap-1 mt-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-green-400" />
+                <p style={{ fontSize: 9, color: "hsl(30,15%,58%)", fontFamily: "'Golos Text', sans-serif" }}>онлайн</p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
       {/* Smart scenario banner */}
-      <div className="rounded-2xl p-4 flex items-center gap-4" style={{ background: "linear-gradient(135deg, hsla(200,55%,48%,0.15) 0%, hsla(185,25%,88%,0.5) 100%)", border: "1px solid hsla(200,55%,48%,0.25)" }}>
-        <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: "hsla(200,55%,48%,0.2)" }}>
-          <Icon name="Brain" size={20} style={{ color: "hsl(200,55%,40%)" }} />
+      <div className="rounded-2xl p-4 flex items-center gap-3" style={{ background: "linear-gradient(135deg, hsla(200,55%,48%,0.15) 0%, hsla(185,25%,88%,0.5) 100%)", border: "1px solid hsla(200,55%,48%,0.25)" }}>
+        <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "hsla(200,55%,48%,0.2)" }}>
+          <Icon name="Brain" size={18} style={{ color: "hsl(200,55%,40%)" }} />
         </div>
         <div className="flex-1">
           <p className="font-body font-medium text-sm" style={{ color: "hsl(30,25%,15%)" }}>Умный сценарий активен</p>
-          <p className="text-xs mt-0.5" style={{ color: "hsl(30,15%,45%)" }}>Полив скорректирован из-за ожидаемого дождя — экономия 40 л</p>
-        </div>
-        <Icon name="ChevronRight" size={16} style={{ color: "hsl(200,55%,48%)" }} />
-      </div>
-
-      {/* Zones */}
-      <div>
-        <h3 className="font-display text-2xl font-light mb-4" style={{ color: "hsl(30,25%,15%)" }}>Зоны полива</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {zones.map((zone, i) => (
-            <div
-              key={zone.id}
-              className="rounded-2xl p-5 forest-card animate-fade-up cursor-pointer hover:shadow-md transition-all"
-              style={{ animationDelay: `${i * 0.08}s`, opacity: 0 }}
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <span className="text-3xl">{zone.icon}</span>
-                  <div>
-                    <p className="font-body font-semibold text-sm" style={{ color: "hsl(30,25%,15%)" }}>{zone.name}</p>
-                    <p className="text-xs mt-0.5" style={{ color: "hsl(30,15%,50%)" }}>Следующий: {zone.nextWatering}</p>
-                  </div>
-                </div>
-                <StatusBadge status={zone.status} />
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="relative">
-                    <MoistureRing value={zone.moisture} size={72} />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <p className="font-display text-lg font-medium" style={{ color: "hsl(30,25%,15%)" }}>{zone.moisture}%</p>
-                    </div>
-                  </div>
-                  <div>
-                    <p className="text-xs font-medium" style={{ color: "hsl(30,15%,45%)" }}>Влажность</p>
-                    <p className="text-xs mt-1" style={{ color: "hsl(30,15%,55%)" }}>Полит {zone.lastWatered}</p>
-                  </div>
-                </div>
-                <button className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
-                  style={{ background: "hsl(var(--primary))" }}>
-                  <Icon name="Droplets" size={16} style={{ color: "hsl(42,30%,96%)" }} />
-                </button>
-              </div>
-            </div>
-          ))}
+          <p className="text-xs mt-0.5" style={{ color: "hsl(30,15%,45%)" }}>Дождь не ожидается — полив по расписанию</p>
         </div>
       </div>
     </div>
@@ -361,21 +340,21 @@ function Settings() {
       <div className="rounded-2xl p-5 forest-card">
         <div className="flex items-center gap-2 mb-4">
           <Icon name="Radio" size={18} style={{ color: "hsl(142,35%,35%)" }} />
-          <p className="font-body font-semibold text-sm" style={{ color: "hsl(30,25%,15%)" }}>Датчики влажности</p>
+          <p className="font-body font-semibold text-sm" style={{ color: "hsl(30,25%,15%)" }}>Датчики</p>
         </div>
         <div className="space-y-4">
-          {zones.map(zone => (
-            <div key={zone.id} className="flex items-center justify-between">
+          {sensors.map(s => (
+            <div key={s.id} className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <span>{zone.icon}</span>
+                <span className="text-xl">{s.icon}</span>
                 <div>
-                  <p className="text-sm font-body" style={{ color: "hsl(30,20%,20%)" }}>{zone.name}</p>
-                  <p className="text-xs" style={{ color: "hsl(30,15%,55%)" }}>Датчик #{zone.id} · Онлайн</p>
+                  <p className="text-sm font-body" style={{ color: "hsl(30,20%,20%)" }}>{s.name}</p>
+                  <p className="text-xs" style={{ color: "hsl(30,15%,55%)" }}>Датчик #{s.id} · Онлайн</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-green-400" />
-                <p className="text-sm font-body font-medium" style={{ color: "hsl(142,35%,30%)" }}>{zone.moisture}%</p>
+                <p className="text-sm font-body font-medium" style={{ color: s.color }}>{s.value}{s.unit}</p>
               </div>
             </div>
           ))}
