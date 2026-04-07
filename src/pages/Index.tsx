@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Icon from "@/components/ui/icon";
 
 type Tab = "dashboard" | "schedule" | "stats" | "settings" | "alerts";
@@ -519,19 +519,35 @@ const navItems: { id: Tab; label: string; icon: string; emoji: string }[] = [
 
 export default function Index() {
   const [activeTab, setActiveTab] = useState<Tab>("dashboard");
+  const tabOrder: Tab[] = ["dashboard", "schedule", "stats", "settings", "alerts"];
+  const activeIndex = tabOrder.indexOf(activeTab);
 
-  const renderTab = () => {
-    switch (activeTab) {
-      case "dashboard": return <Dashboard />;
-      case "schedule": return <Schedule />;
-      case "stats": return <Statistics />;
-      case "settings": return <Settings />;
-      case "alerts": return <Alerts />;
+  const touchStartX = useRef<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0 && activeIndex < tabOrder.length - 1) setActiveTab(tabOrder[activeIndex + 1]);
+      if (diff < 0 && activeIndex > 0) setActiveTab(tabOrder[activeIndex - 1]);
     }
+    touchStartX.current = null;
+  };
+
+  const pages: Record<Tab, React.ReactNode> = {
+    dashboard: <Dashboard />,
+    schedule: <Schedule />,
+    stats: <Statistics />,
+    settings: <Settings />,
+    alerts: <Alerts />,
   };
 
   return (
-    <div className="min-h-screen nature-bg flex items-center justify-center" style={{ background: "hsl(220,15%,12%)" }}>
+    <div className="min-h-screen flex items-center justify-center" style={{ background: "hsl(220,15%,12%)" }}>
       {/* iPhone shell */}
       <div className="relative flex flex-col" style={{
         width: 390,
@@ -551,22 +567,41 @@ export default function Index() {
 
         {/* Status bar */}
         <div className="flex items-center justify-between px-8 pt-16 pb-2 flex-shrink-0"
-          style={{ background: "transparent" }}>
-          <span className="text-xs font-body font-semibold" style={{ color: "hsl(30,15%,80%)" }}>9:41</span>
+          style={{ background: "hsl(42,30%,96%)" }}>
+          <span className="text-xs font-body font-semibold" style={{ color: "hsl(30,25%,20%)" }}>9:41</span>
           <div className="flex items-center gap-1.5">
-            <Icon name="Signal" size={14} style={{ color: "hsl(30,15%,80%)" }} />
-            <Icon name="Wifi" size={14} style={{ color: "hsl(30,15%,80%)" }} />
-            <Icon name="Battery" size={16} style={{ color: "hsl(30,15%,80%)" }} />
+            <Icon name="Signal" size={14} style={{ color: "hsl(30,25%,20%)" }} />
+            <Icon name="Wifi" size={14} style={{ color: "hsl(30,25%,20%)" }} />
+            <Icon name="Battery" size={16} style={{ color: "hsl(30,25%,20%)" }} />
           </div>
         </div>
 
-        {/* Screen content */}
-        <div className="flex-1 overflow-y-auto overflow-x-hidden" style={{
-          background: "hsl(42,30%,96%)",
-          scrollbarWidth: "none",
-        }}>
-          <div className="p-4 pb-32">
-            {renderTab()}
+        {/* Horizontal slider */}
+        <div
+          className="flex-1 overflow-hidden"
+          style={{ background: "hsl(42,30%,96%)", position: "relative" }}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
+          <div
+            style={{
+              display: "flex",
+              width: `${tabOrder.length * 100}%`,
+              height: "100%",
+              transform: `translateX(-${(activeIndex / tabOrder.length) * 100}%)`,
+              transition: "transform 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
+            }}
+          >
+            {tabOrder.map(tab => (
+              <div
+                key={tab}
+                style={{ width: `${100 / tabOrder.length}%`, height: "100%", overflowY: "auto", overflowX: "hidden", scrollbarWidth: "none" }}
+              >
+                <div className="p-4 pb-32">
+                  {pages[tab]}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
