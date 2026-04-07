@@ -95,7 +95,7 @@ function Dashboard() {
         <div className="relative p-8">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-sm font-body" style={{ color: "hsl(85,30%,75%)" }}>Сад · Сегодня, 7 апреля</p>
+              <p className="text-sm font-body" style={{ color: "hsl(85,30%,75%)" }}>Сад · Сегодня, 15 мая</p>
               <h2 className="font-display text-5xl font-light mt-1" style={{ color: "hsl(42,30%,96%)" }}>
                 Хороший день<br /><em>для полива</em>
               </h2>
