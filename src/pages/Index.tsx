@@ -531,63 +531,87 @@ export default function Index() {
   };
 
   return (
-    <div className="min-h-screen nature-bg flex">
-      {/* Sidebar */}
-      <aside className="w-64 flex-shrink-0 flex flex-col min-h-screen"
-        style={{ background: "linear-gradient(180deg, hsl(142,30%,18%) 0%, hsl(142,25%,14%) 100%)" }}>
+    <div className="min-h-screen nature-bg flex items-center justify-center" style={{ background: "hsl(220,15%,12%)" }}>
+      {/* iPhone shell */}
+      <div className="relative flex flex-col" style={{
+        width: 390,
+        height: 844,
+        borderRadius: 54,
+        background: "hsl(220,15%,8%)",
+        boxShadow: "0 0 0 10px hsl(220,10%,18%), 0 0 0 12px hsl(220,10%,22%), 0 40px 80px hsla(0,0%,0%,0.7), inset 0 0 0 1px hsla(255,10%,40%,0.3)",
+        overflow: "hidden",
+      }}>
 
-        <div className="p-6 pb-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl flex items-center justify-center"
-              style={{ background: "hsla(85,28%,60%,0.25)" }}>
-              <span className="text-xl">💧</span>
-            </div>
-            <div>
-              <p className="font-display text-xl font-light" style={{ color: "hsl(85,20%,90%)" }}>АкваФлора</p>
-              <p className="text-xs font-body" style={{ color: "hsl(85,15%,55%)" }}>Умный полив</p>
-            </div>
+        {/* Dynamic Island */}
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50" style={{
+          width: 120, height: 34,
+          background: "hsl(220,15%,5%)",
+          borderRadius: 20,
+        }} />
+
+        {/* Status bar */}
+        <div className="flex items-center justify-between px-8 pt-16 pb-2 flex-shrink-0"
+          style={{ background: "transparent" }}>
+          <span className="text-xs font-body font-semibold" style={{ color: "hsl(30,15%,80%)" }}>9:41</span>
+          <div className="flex items-center gap-1.5">
+            <Icon name="Signal" size={14} style={{ color: "hsl(30,15%,80%)" }} />
+            <Icon name="Wifi" size={14} style={{ color: "hsl(30,15%,80%)" }} />
+            <Icon name="Battery" size={16} style={{ color: "hsl(30,15%,80%)" }} />
           </div>
         </div>
 
-        <div className="mx-4 rounded-2xl overflow-hidden mb-4" style={{ height: 100 }}>
-          <img src={ILLUSTRATION} alt="" className="w-full h-full object-cover object-top opacity-60" />
+        {/* Screen content */}
+        <div className="flex-1 overflow-y-auto overflow-x-hidden" style={{
+          background: "hsl(42,30%,96%)",
+          scrollbarWidth: "none",
+        }}>
+          <div className="p-4 pb-32">
+            {renderTab()}
+          </div>
         </div>
 
-        <nav className="flex-1 px-3 space-y-1">
+        {/* Bottom tab bar — iOS style */}
+        <div className="flex-shrink-0 flex items-center justify-around px-2 pt-3 pb-8"
+          style={{
+            background: "hsla(42,30%,97%,0.92)",
+            backdropFilter: "blur(20px)",
+            borderTop: "1px solid hsla(42,20%,80%,0.5)",
+          }}>
           {navItems.map(item => (
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
-              className={`nav-item w-full text-left ${activeTab === item.id ? "active" : ""}`}
-              style={{ color: activeTab === item.id ? "hsl(42,30%,96%)" : "hsl(85,15%,65%)" }}
+              className="flex flex-col items-center gap-1 relative"
+              style={{ minWidth: 60 }}
             >
-              <span className="text-base">{item.emoji}</span>
-              <span>{item.label}</span>
-              {item.id === "alerts" && (
-                <span className="ml-auto text-xs px-1.5 py-0.5 rounded-full font-body"
-                  style={{ background: "hsla(10,70%,50%,0.3)", color: "hsl(10,70%,80%)" }}>2</span>
+              <div className="relative">
+                <span className="text-2xl leading-none">{item.emoji}</span>
+                {item.id === "alerts" && (
+                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-white flex items-center justify-center"
+                    style={{ background: "hsl(10,70%,50%)", fontSize: 9, fontFamily: "'Golos Text', sans-serif" }}>2</span>
+                )}
+              </div>
+              <span className="font-body text-center leading-none"
+                style={{
+                  fontSize: 10,
+                  color: activeTab === item.id ? "hsl(142,35%,28%)" : "hsl(30,10%,55%)",
+                  fontWeight: activeTab === item.id ? 600 : 400,
+                }}>
+                {item.label}
+              </span>
+              {activeTab === item.id && (
+                <div className="absolute -bottom-1 w-1 h-1 rounded-full" style={{ background: "hsl(142,35%,28%)" }} />
               )}
             </button>
           ))}
-        </nav>
-
-        <div className="p-4 m-3 rounded-2xl"
-          style={{ background: "hsla(85,28%,42%,0.2)", border: "1px solid hsla(85,28%,42%,0.3)" }}>
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-            <p className="text-xs font-body font-medium" style={{ color: "hsl(85,20%,80%)" }}>Система активна</p>
-          </div>
-          <p className="text-xs font-body" style={{ color: "hsl(85,15%,55%)" }}>4 зоны · 2 активны</p>
-          <p className="text-xs font-body mt-1" style={{ color: "hsl(85,15%,55%)" }}>Следующий полив: 18:00</p>
         </div>
-      </aside>
 
-      {/* Main Content */}
-      <main className="flex-1 overflow-y-auto">
-        <div className="max-w-2xl mx-auto p-8">
-          {renderTab()}
+        {/* Home indicator */}
+        <div className="flex-shrink-0 flex justify-center pb-2" style={{ background: "hsla(42,30%,97%,0.92)" }}>
+          <div style={{ width: 130, height: 4, background: "hsl(30,10%,30%)", borderRadius: 2 }} />
         </div>
-      </main>
+
+      </div>
     </div>
   );
 }
