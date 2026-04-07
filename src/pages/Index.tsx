@@ -450,7 +450,7 @@ function Alerts() {
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
-        <h3 className="font-display text-2xl font-light" style={{ color: "hsl(30,25%,15%)" }}>Алерты и напоминания</h3>
+        <h3 className="font-display text-2xl font-light" style={{ color: "hsl(30,25%,15%)" }}>Уведомления и напоминания</h3>
         <span className="text-xs px-3 py-1 rounded-full font-body font-medium"
           style={{ background: "hsla(10,70%,50%,0.12)", color: "hsl(10,70%,40%)" }}>
           2 активных
@@ -514,7 +514,7 @@ const navItems: { id: Tab; label: string; icon: string; emoji: string }[] = [
   { id: "schedule", label: "Расписание", icon: "CalendarDays", emoji: "📅" },
   { id: "stats", label: "Статистика", icon: "BarChart2", emoji: "📊" },
   { id: "settings", label: "Настройки", icon: "Settings", emoji: "⚙️" },
-  { id: "alerts", label: "Алерты", icon: "Bell", emoji: "🔔" },
+  { id: "alerts", label: "Уведомления", icon: "Bell", emoji: "🔔" },
 ];
 
 export default function Index() {
